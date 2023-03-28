@@ -18,14 +18,11 @@ if [ ! $# == 1 ]; then
 else
     version=$1
     repo=079779381212.dkr.ecr.ap-southeast-1.amazonaws.com
-    image=timescaledb
-
-    echo docker build -t version .
-    docker buildx build -t --platform linux/amd64 $version . || exit 1
-    env GOOS=linux GOARCH=amd64 go build -o server -tags dock -ldflags "-X main.version=$version -X main.build=`date -u +%Y%m%d.%H%M%S` -X dockrest/gconst.UnlimitedVersion=unlimited -X dockrest/gconst.App=dock" .  || exit 1
+    image=timescaledb-gw
 
     # https://medium.com/geekculture/from-apple-silicon-to-heroku-docker-registry-without-swearing-36a2f59b30a3
-    echo docker buildx build --platform linux/amd64 -f Dockerfile_local . --build-arg VERSION=$version --tag=$repo/$image:$version || exit 1
-    docker buildx build --platform linux/amd64 -f Dockerfile_local . --build-arg VERSION=$version --tag=$repo/$image:$version || exit 1
+    echo docker buildx build --platform linux/amd64 . --tag=$repo/$image:$version || exit 1
+    docker buildx build --platform linux/amd64 . --tag=$repo/$image:$version || exit 1
+    # For local Apple sillicon: docker buildx build --platform linux/arm64/v8 -t timescaledb:0.0.5 .
 fi
 docker push $repo/$image:$version
