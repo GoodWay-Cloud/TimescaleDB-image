@@ -20,7 +20,7 @@ ENV POSTGRES_PASSWORD postgres
 ENV POSTGRES_DB mydb
 
 # 將 pg_cron 安裝腳本加入容器中
-COPY install_pg_cron.sql /docker-entrypoint-initdb.d/
+COPY install_pg_cron.sh /docker-entrypoint-initdb.d/
 
 # 暴露 PostgreSQL 和 TimescaleDB 的預設端口
 EXPOSE 5432
